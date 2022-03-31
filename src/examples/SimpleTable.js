@@ -2,107 +2,54 @@ import axios from "axios";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 import { useTable } from "react-table";
+import qs from "qs";
 
 import Table from "../components/Table";
 
 const useLoads = (params) => {
+  const page = {
+    number: params?.pageIndex,
+    size: params?.pageSize,
+  };
+
   return useQuery(
-    ["carriers/loads", params?.page?.number, params?.page?.size],
-    () => axios.get("/carriers/loads"),
+    ["carriers/loads", page?.number, page?.size],
+    () =>
+      axios
+        .get("/carriers/loads", {
+          params: {
+            page,
+          },
+          paramsSerializer: function (params) {
+            return qs.stringify(params, { arrayFormat: "brackets" });
+          },
+        })
+        .then((response) => response.data),
     {
       keepPreviousData: true,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     }
   );
 };
 
 const SimpleTable = () => {
-  const data = useMemo(
-    () => [
-      {
-        col1: "Hello",
-        col2: "World"
-      },
-      {
-        col1: "react-table",
-        col2: "rocks"
-      },
-      {
-        col1: "whatever",
-        col2: "you want"
-      }
-    ],
-    []
-  );
-
   const columns = useMemo(
     () => [
       {
         Header: "Column 1",
-        accessor: "col1" // accessor is the "key" in the data
+        accessor: "col1", // accessor is the "key" in the data
       },
       {
         Header: "Column 2",
-        accessor: "col2"
-      }
+        accessor: "col2",
+      },
     ],
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable({ columns, data });
-
   return (
-    <Table.Query query={useLoads}>
-      <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    borderBottom: "solid 3px red",
-                    background: "aliceblue",
-                    color: "black",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{
-                        padding: "10px",
-                        border: "solid 1px gray",
-                        background: "papayawhip"
-                      }}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <Table.Query query={useLoads} columns={columns}>
+      <Table.Wrapper />
     </Table.Query>
   );
 };

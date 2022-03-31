@@ -1,7 +1,8 @@
+import Table from "./Table";
 import TableQuery from "./Table.Query";
+import TableWrapper from "./Table.Wrapper";
 
-const Table = () => {};
-
+Table.Wrapper = TableWrapper;
 Table.Query = TableQuery;
 
 export default Table;

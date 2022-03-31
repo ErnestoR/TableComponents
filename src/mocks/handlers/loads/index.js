@@ -2,10 +2,8 @@ import { rest } from "msw";
 import { wait } from "../utils";
 
 export const loads = rest.get(`/carriers/loads`, async (req, res, ctx) => {
-  console.log("rest.get");
-
   const {
-    url: { searchParams }
+    url: { searchParams },
   } = req;
   const params = Object.fromEntries(searchParams);
 
@@ -14,28 +12,28 @@ export const loads = rest.get(`/carriers/loads`, async (req, res, ctx) => {
       id: "1",
       origin: {
         country: "mx",
-        location: "Mexico"
+        location: "Mexico",
       },
       destination: {
         country: "mx",
-        location: "Nuevo Laredo"
+        location: "Nuevo Laredo",
       },
       deliveredDate: "13 Feb, 14:25",
       ammount: 1400,
       currency: "mxn",
       status: "Upload documents",
-      lineItems: []
+      lineItems: [],
     },
 
     {
       id: "AT-152302",
       origin: {
         country: "mx",
-        location: "Mexico"
+        location: "Mexico",
       },
       destination: {
         country: "mx",
-        location: "Nuevo Laredo"
+        location: "Nuevo Laredo",
       },
       deliveredDate: "12 Feb, 08:30",
       ammount: 1380,
@@ -46,40 +44,40 @@ export const loads = rest.get(`/carriers/loads`, async (req, res, ctx) => {
           ammount: 400,
           currency: "mxn",
           type: "additional",
-          status: "Rejected"
-        }
-      ]
+          status: "Rejected",
+        },
+      ],
     },
     {
       id: "AT-152303",
       origin: {
         country: "mx",
-        location: "Mexico"
+        location: "Mexico",
       },
       destination: {
         country: "mx",
-        location: "Nuevo Laredo"
+        location: "Nuevo Laredo",
       },
       deliveredDate: "10 Feb, 13:50",
       ammount: 775,
       status: "Pending Approval",
-      lineItems: []
+      lineItems: [],
     },
     {
       id: "AT-152304",
       origin: {
         country: "mx",
-        location: "Mexico"
+        location: "Mexico",
       },
       destination: {
         country: "mx",
-        location: "Nuevo Laredo"
+        location: "Nuevo Laredo",
       },
       deliveredDate: "10 Feb, 13:51",
       ammount: 1775,
       status: "Paid",
-      lineItems: []
-    }
+      lineItems: [],
+    },
   ];
 
   const pageNumber = Number(params["page[number]"]);
@@ -98,9 +96,9 @@ export const loads = rest.get(`/carriers/loads`, async (req, res, ctx) => {
       metadata: {
         currentPage: pageNumber,
         totalPages: Math.ceil(data.length / pageSize),
-        totalRecords: data.length
+        totalRecords: data.length,
       },
-      loads
+      loads,
     })
   );
 });
