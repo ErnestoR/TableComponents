@@ -7,9 +7,10 @@ import qs from "qs";
 import Table from "../components/Table";
 
 const useLoads = (params) => {
+  debugger;
   const page = {
     number: params?.pageIndex,
-    size: params?.pageSize,
+    size: params?.pageSize
   };
 
   return useQuery(
@@ -18,16 +19,16 @@ const useLoads = (params) => {
       axios
         .get("/carriers/loads", {
           params: {
-            page,
+            page
           },
           paramsSerializer: function (params) {
             return qs.stringify(params, { arrayFormat: "brackets" });
-          },
+          }
         })
         .then((response) => response.data),
     {
       keepPreviousData: true,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: false
     }
   );
 };
@@ -36,13 +37,13 @@ const SimpleTable = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Column 1",
-        accessor: "col1", // accessor is the "key" in the data
+        Header: "id",
+        accessor: "id" // accessor is the "key" in the data
       },
       {
-        Header: "Column 2",
-        accessor: "col2",
-      },
+        Header: "status",
+        accessor: "status"
+      }
     ],
     []
   );

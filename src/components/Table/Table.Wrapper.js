@@ -7,88 +7,118 @@ const TableWrapper = (props) => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page,
     prepareRow,
-    setFilter,
-    setAllFilters,
-    state,
+
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    // Get the state from the instance
+    state: { pageIndex, pageSize }
   } = tableInstance;
 
   console.log(tableInstance);
 
   return (
-    <Table {...getTableProps()}>
-      <Table.thead>
-        {headerGroups.map((headerGroup) => (
-          // eslint-disable-next-line react/jsx-key
-          <Table.tr isHeader {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              // eslint-disable-next-line react/jsx-key
-              <Table.th
-                {...column.getHeaderProps(
-                  column.canSort && column.getSortByToggleProps()
-                )}
-              >
-                {column.render("Header")}
-                {column.canSort && <Table.SortOptions column={column} />}
-              </Table.th>
-            ))}
-          </Table.tr>
-        ))}
-      </Table.thead>
-      <Table.tbody {...getTableBodyProps()}>
-        {query.isFetching ? (
-          <Table.tr>
-            <Table.td colSpan="7" className=" h-24 ">
-              <Spinner />
-            </Table.td>
-          </Table.tr>
-        ) : page.length === 0 ? (
-          <Table.tr>
-            <Table.td colSpan="7" className=" h-24 ">
-              <div className="flex flex-col items-center justify-center py-10 ">
-                <motion.div
-                  animate={{
-                    rotate: [-5, 2, 0, -5],
-                    transition: {
-                      delay: 0.3,
-                      repeat: Infinity,
-                      duration: 0.5,
-                    },
-                  }}
-                >
-                  <Iconography name="insurance" />
-                </motion.div>
-                <p>
-                  <Text color="forest">{"no-results-found"}</Text>
-                </p>
-                <p>
-                  <Text color="steel">{"generic-not-found-text"}</Text>
-                </p>
-              </div>
-            </Table.td>
-          </Table.tr>
-        ) : (
-          page.map((row) => {
+    <>
+      <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps?.())}>
+                  {column.render("Header")}
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? " 🔽"
+                        : " 🔼"
+                      : ""}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row) => {
             prepareRow(row);
-
             return (
-              // eslint-disable-next-line react/jsx-key
-              <Table.tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    // eslint-disable-next-line react/jsx-key
-                    <Table.td {...cell.getCellProps()}>
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        padding: "10px",
+                        border: "solid 1px gray",
+                        background: "papayawhip"
+                      }}
+                    >
                       {cell.render("Cell")}
-                    </Table.td>
+                    </td>
                   );
                 })}
-              </Table.tr>
+              </tr>
             );
-          })
-        )}
-      </Table.tbody>
-    </Table>
+          })}
+        </tbody>
+      </table>
+      {/* 
+        Pagination can be built however you'd like. 
+        This is just a very basic UI implementation:
+      */}
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {"<<"}
+        </button>{" "}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {"<"}
+        </button>{" "}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {">"}
+        </button>{" "}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {">>"}
+        </button>{" "}
+        <span>
+          Page{" "}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{" "}
+        </span>
+        <span>
+          | Go to page:{" "}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "100px" }}
+          />
+        </span>{" "}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+    </>
   );
 };
 
