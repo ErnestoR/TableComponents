@@ -15,11 +15,12 @@ const TableWrapper = (props) => {
     pageOptions,
     pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
+
+    nextQueryPage,
+    previousQueryPage,
+    setQueryPageSize,
     // Get the state from the instance
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = tableInstance;
 
   console.log(tableInstance);
@@ -58,7 +59,7 @@ const TableWrapper = (props) => {
                       style={{
                         padding: "10px",
                         border: "solid 1px gray",
-                        background: "papayawhip"
+                        background: "papayawhip",
                       }}
                     >
                       {cell.render("Cell")}
@@ -75,17 +76,11 @@ const TableWrapper = (props) => {
         This is just a very basic UI implementation:
       */}
       <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button onClick={() => previousQueryPage()} disabled={!canPreviousPage}>
           {"<"}
         </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button onClick={() => nextQueryPage()} disabled={!canNextPage}>
           {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
         </button>{" "}
         <span>
           Page{" "}
@@ -93,25 +88,13 @@ const TableWrapper = (props) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
         <select
           value={pageSize}
           onChange={(e) => {
-            setPageSize(Number(e.target.value));
+            setQueryPageSize(Number(e.target.value));
           }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
+          {[1, 2, 5, 10].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>

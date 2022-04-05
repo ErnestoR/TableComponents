@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useEffect } from "react";
 
 const initialState = {
   queryPageIndex: 0,
@@ -55,6 +55,12 @@ export const usePaginationState = () => {
   }
 
   function useControlledState(state) {
+    console.log(state);
+
+    useEffect(() => {
+      console.log("test");
+    });
+
     return useMemo(
       () => ({
         ...state,

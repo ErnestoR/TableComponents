@@ -1,4 +1,4 @@
-import { usePagination, useTable } from "react-table";
+import { usePagination, useTable, useSortBy } from "react-table";
 import { usePaginationState } from "./usePaginationState";
 
 export const useTableQueryPagination = (
@@ -14,6 +14,7 @@ export const useTableQueryPagination = (
       ...tableConfig,
       data: query?.data?.loads || [],
       manualPagination: true,
+      manualSortBy: true,
       initialState: {
         pageIndex,
         pageSize,

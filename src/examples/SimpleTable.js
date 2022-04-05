@@ -1,16 +1,15 @@
 import axios from "axios";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import qs from "qs";
 
 import Table from "../components/Table";
 
 const useLoads = (params) => {
-  debugger;
   const page = {
     number: params?.pageIndex,
-    size: params?.pageSize
+    size: params?.pageSize,
   };
 
   return useQuery(
@@ -19,16 +18,16 @@ const useLoads = (params) => {
       axios
         .get("/carriers/loads", {
           params: {
-            page
+            page,
           },
           paramsSerializer: function (params) {
             return qs.stringify(params, { arrayFormat: "brackets" });
-          }
+          },
         })
         .then((response) => response.data),
     {
       keepPreviousData: true,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     }
   );
 };
@@ -38,18 +37,18 @@ const SimpleTable = () => {
     () => [
       {
         Header: "id",
-        accessor: "id" // accessor is the "key" in the data
+        accessor: "id", // accessor is the "key" in the data
       },
       {
         Header: "status",
-        accessor: "status"
-      }
+        accessor: "status",
+      },
     ],
     []
   );
 
   return (
-    <Table.Query query={useLoads} columns={columns}>
+    <Table.Query query={useLoads} columns={columns} tablePlugins={[useSortBy]}>
       <Table.Wrapper />
     </Table.Query>
   );
