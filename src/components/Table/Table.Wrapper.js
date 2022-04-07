@@ -1,4 +1,4 @@
-import Table from ".";
+// import Table from ".";
 
 const TableWrapper = (props) => {
   const { query, tableInstance } = props;
@@ -23,10 +23,9 @@ const TableWrapper = (props) => {
     state: { pageIndex, pageSize },
   } = tableInstance;
 
-  console.log(tableInstance);
-
   return (
     <>
+      {query.isFetching && "... fetching ..."}
       <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -71,36 +70,6 @@ const TableWrapper = (props) => {
           })}
         </tbody>
       </table>
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
-      <div className="pagination">
-        <button onClick={() => previousQueryPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextQueryPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setQueryPageSize(Number(e.target.value));
-          }}
-        >
-          {[1, 2, 5, 10].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
     </>
   );
 };

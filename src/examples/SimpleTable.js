@@ -5,6 +5,8 @@ import { useTable, useSortBy } from "react-table";
 import qs from "qs";
 
 import Table from "../components/Table";
+import TablePagination from "../components/Table/TablePagination";
+import MyCustomToolbar from "../components/Table/MyCustomToolbar";
 
 const useLoads = (params) => {
   const page = {
@@ -48,8 +50,19 @@ const SimpleTable = () => {
   );
 
   return (
-    <Table.Query query={useLoads} columns={columns} tablePlugins={[useSortBy]}>
+    <Table.Query
+      query={useLoads}
+      columns={columns}
+      tablePlugins={
+        [
+          // useSortBy
+        ]
+      }
+    >
+      <MyCustomToolbar />
       <Table.Wrapper />
+
+      <TablePagination />
     </Table.Query>
   );
 };
